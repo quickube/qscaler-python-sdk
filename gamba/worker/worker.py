@@ -4,11 +4,11 @@ from typing import Callable
 
 from attr import dataclass
 
-from pkg.brokers.brokers_factory import BrokersFactory
-from pkg.configuration.config import config
-from pkg.results_storage.results_storage_factory import ResultsStoragesFactory
+from gamba.brokers.brokers_factory import BrokersFactory
+from gamba.configuration.config import config
+from gamba.results_storage.results_storage_factory import ResultsStoragesFactory
 
-from pkg.event_loop.event_loop import EventLoop, GracefulShutdown
+from gamba.event_loop.event_loop import EventLoop, GracefulShutdown
 
 logger = logging.getLogger(__name__)
 

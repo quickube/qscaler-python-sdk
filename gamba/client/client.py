@@ -1,8 +1,8 @@
 import uuid
 from typing import Any
 
-from pkg.brokers.brokers_factory import BrokersFactory
-from pkg.results_storage.results_storage_factory import ResultsStoragesFactory
+from gamba.brokers.brokers_factory import BrokersFactory
+from gamba.results_storage.results_storage_factory import ResultsStoragesFactory
 
 
 class Client:

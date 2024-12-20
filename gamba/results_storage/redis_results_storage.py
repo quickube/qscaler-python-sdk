@@ -3,8 +3,8 @@ from typing import Any
 
 import redis
 
-from pkg.configuration.config import config
-from pkg.results_storage.results_storage import ResultsStorage
+from gamba.configuration.config import config
+from gamba.results_storage.results_storage import ResultsStorage
 
 
 class RedisResultsStorage(ResultsStorage):

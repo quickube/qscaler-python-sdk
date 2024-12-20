@@ -33,7 +33,7 @@ class ResultsStorages(Enum):
 
 @dataclass
 class StorageConfig:
-    type: str = field(default="redis")
+    type: str = field(default=os.getenv("STORAGE"))
     host: str = field(default=os.getenv("STORAGE_HOST"))
     port: int = field(default_factory=lambda: int(os.getenv("STORAGE_PORT", -1)))
     password: str = field(default=os.getenv("STORAGE_PASSWORD"))

@@ -2,7 +2,7 @@ import asyncio
 from abc import ABC, abstractmethod
 from typing import Any
 
-from pkg.utils.singleton import SingletonMeta
+from gamba.utils.singleton import SingletonMeta
 
 
 class ResultsStorage(ABC, metaclass=SingletonMeta):

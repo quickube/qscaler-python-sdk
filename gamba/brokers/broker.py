@@ -1,9 +1,8 @@
-import uuid
 from abc import ABC
 from abc import abstractmethod
 from typing import Any, List, Tuple
 
-from pkg.utils.singleton import SingletonMeta
+from gamba.utils.singleton import SingletonMeta
 
 
 class Broker(ABC, metaclass=SingletonMeta):

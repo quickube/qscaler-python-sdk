@@ -3,8 +3,8 @@ from typing import Any, List, Tuple
 
 import redis
 
-from pkg.brokers.broker import Broker
-from pkg.configuration.config import config
+from gamba.brokers.broker import Broker
+from gamba.configuration.config import config
 
 
 class RedisBroker(Broker):

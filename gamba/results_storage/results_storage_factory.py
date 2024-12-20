@@ -1,8 +1,8 @@
 from typing import Optional, NoReturn, Union
 
-from pkg.configuration.config import config, ResultsStorages
-from pkg.results_storage.redis_results_storage import RedisResultsStorage
-from pkg.results_storage.results_storage import ResultsStorage
+from gamba.configuration.config import config, ResultsStorages
+from gamba.results_storage.redis_results_storage import RedisResultsStorage
+from gamba.results_storage.results_storage import ResultsStorage
 
 
 class ResultsStoragesFactory:
