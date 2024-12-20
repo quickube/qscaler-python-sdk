@@ -22,13 +22,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           cache: 'poetry'
       - run: poetry install --all-extras
-      - run: poetry run pytest
+      - run: poetry run tests
   lint:
     runs-on: ubuntu-latest
     steps:
