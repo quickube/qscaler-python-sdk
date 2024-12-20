@@ -1,7 +1,6 @@
 import os
 from dataclasses import field, dataclass
 from enum import Enum
-from typing import Optional
 
 
 class Brokers(Enum):
@@ -20,11 +19,10 @@ class BrokerConfig:
         if self.type == Brokers.REDIS.value:
             self._redis_validations()
         else:
-            raise NotImplementedError( f"Invalid broker type entered: {self.type}")
+            raise NotImplementedError(f"Invalid broker type entered: {self.type}")
 
     def _redis_validations(self):
         assert self.db is not None, "redis db must be entered"
-
 
 
 class ResultsStorages(Enum):
@@ -43,7 +41,7 @@ class StorageConfig:
         if self.type == Brokers.REDIS.value:
             self._redis_validations()
         else:
-            raise NotImplementedError( f"Invalid storage type entered: {self.type}")
+            raise NotImplementedError(f"Invalid storage type entered: {self.type}")
 
     def _redis_validations(self):
         assert self.db is not None, "redis db must be entered"

@@ -1,8 +1,6 @@
-import logging
 from typing import Dict, Any
 
 from gamba.worker.worker import Worker
-
 
 worker = Worker(queue="queue1")
 

@@ -1,16 +1,13 @@
 import logging
-import uuid
 from typing import Callable
-
-from attr import dataclass
 
 from gamba.brokers.brokers_factory import BrokersFactory
 from gamba.configuration.config import config
+from gamba.event_loop.event_loop import EventLoop, GracefulShutdown
 from gamba.results_storage.results_storage_factory import ResultsStoragesFactory
 
-from gamba.event_loop.event_loop import EventLoop, GracefulShutdown
-
 logger = logging.getLogger(__name__)
+
 
 class Worker:
 
@@ -30,6 +27,7 @@ class Worker:
             if self.act is not None:
                 raise NotImplementedError("worker can support a single task")
             self.act = func
+
         return wrapper
 
     def shutdown(self, func=None):
@@ -56,5 +54,3 @@ class Worker:
         task_id = data['task_id']
         results = self.act(data['data'])
         self.results_storage.set(task_id, results)
-
-
