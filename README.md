@@ -8,9 +8,9 @@ some stuff to be written here...
 some stuff to be written here...
 
 ## How It Works
-worker/client [example here](./examples)
 * **Client**: will send jobs to work queue waiting for worker to resolve them
 * **Worker**: take jobs from queue and will gracefully die when requested
+<br/>worker/client example [here](./examples)
 
 
 ## Setup
