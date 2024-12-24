@@ -1,9 +1,9 @@
+import time
 from typing import Dict, Any
 
 from qscaler_sdk.worker.worker import Worker
 
 worker = Worker(queue="queue1")
-
 
 @worker.shutdown
 def shutdown():
@@ -12,13 +12,7 @@ def shutdown():
 
 @worker.task
 def example(task: Dict[str, Any]) -> Any:
-    # IMPLEMENT ME
-    # ---------------------------------
-    param1 = task['param1']
-    param2 = task['param2']
-    result = param1 + param2
-    # ---------------------------------
-    return result
+    time.sleep(5)
 
 
 if __name__ == "__main__":

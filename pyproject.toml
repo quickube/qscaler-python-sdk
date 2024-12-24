@@ -1,20 +1,23 @@
 [tool.poetry]
 name = "qscaler-sdk"
-version = "0.1.0"
+version = "0.0.1"
 description = ""
 authors = ["Omri Assa <omriassa@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
-redis = "^5.2.1"
+python = "^3.11"
+redis = "*"
 
-
-[tool.poetry.group.test.dependencies]
-pytest = "^8.3.4"
 
 [tool.poetry.scripts]
 tests = 'pytest:main'
+
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
+pytest = "*"
 
 [build-system]
 requires = ["poetry-core"]
