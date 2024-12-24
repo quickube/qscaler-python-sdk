@@ -28,6 +28,7 @@ class BrokerConfig:
 @dataclass
 class Config:
     broker: BrokerConfig = field(default_factory=lambda: BrokerConfig())
+    queue: str = field(default=os.getenv("QUEUE_NAME"))
 
 
 config = Config()

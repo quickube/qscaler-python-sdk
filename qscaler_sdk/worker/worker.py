@@ -1,5 +1,5 @@
 import logging
-from typing import Callable
+from typing import Callable, Optional
 
 from qscaler_sdk.brokers.brokers_factory import BrokersFactory
 from qscaler_sdk.configuration.config import config
@@ -10,9 +10,11 @@ logger = logging.getLogger(__name__)
 
 class Worker:
 
-    def __init__(self, queue: str):
+    def __init__(self, queue_name: Optional[str] = None):
         self.broker = BrokersFactory.get_broker(config.broker.type)
-        self.queue = queue
+        if queue_name is None:
+            queue_name = config.queue
+        self.queue = queue_name
         self.act = None
         self.extra_termination = None
 
