@@ -19,7 +19,7 @@ class BrokerConfig:
         if self.type == Brokers.REDIS.value:
             self._redis_validations()
         else:
-            raise NotImplementedError(f"Invalid broker type entered: {self.type}")
+            self.type = Brokers.REDIS.value
 
     def _redis_validations(self):
         assert self.db is not None, "redis db must be entered"

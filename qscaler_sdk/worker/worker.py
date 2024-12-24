@@ -14,6 +14,7 @@ class Worker:
         self.broker = BrokersFactory.get_broker(config.broker.type)
         if queue_name is None:
             queue_name = config.queue
+        assert queue_name is not None, "queue name must be entered"
         self.queue = queue_name
         self.act = None
         self.extra_termination = None
