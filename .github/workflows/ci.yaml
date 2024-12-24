@@ -29,7 +29,7 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'poetry'
-      - run: poetry install --all-extras
+      - run: poetry install --all-extras --with=test
       - run: poetry run tests
   lint:
     runs-on: ubuntu-latest
