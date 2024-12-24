@@ -3,7 +3,7 @@ from typing import Dict, Any
 
 from qscaler_sdk.worker.worker import Worker
 
-worker = Worker(queue="queue1")
+worker = Worker(queue_name="queue1")
 
 @worker.shutdown
 def shutdown():
