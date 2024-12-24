@@ -1,6 +1,7 @@
 from typing import Optional
-from gamba.brokers.redis_broker import RedisBroker
-from gamba.configuration.config import Brokers, config
+
+from qscaler_sdk.brokers.redis_broker import RedisBroker
+from qscaler_sdk.configuration.config import config, Brokers
 
 
 class BrokersFactory:

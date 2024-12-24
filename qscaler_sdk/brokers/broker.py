@@ -2,7 +2,7 @@ from abc import ABC
 from abc import abstractmethod
 from typing import Any, List, Tuple
 
-from gamba.utils.singleton import SingletonMeta
+from qscaler_sdk.utils.singleton import SingletonMeta
 
 
 class Broker(ABC, metaclass=SingletonMeta):

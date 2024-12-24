@@ -1,6 +1,6 @@
 from typing import Dict, Any
 
-from gamba.worker.worker import Worker
+from qscaler_sdk.worker.worker import Worker
 
 worker = Worker(queue="queue1")
 

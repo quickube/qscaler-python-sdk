@@ -1,5 +1,5 @@
-# Gamba
-Gamba is a python package to use with QScaler for an easy server-worker setup using the QScaler autoscaler 
+# QScaler-SDK
+qscaler-sdk is a python package to use with QScaler for an easy server-worker setup using the QScaler autoscaler 
 
 ## Overview
 some stuff to be written here...
@@ -15,12 +15,6 @@ some stuff to be written here...
 
 ## Setup
 # ENV-VARS:
-### Storage
-* `STORAGE: currently supporting only redis`
-* `STORAGE_HOST: storage client host`
-* `STORAGE_PORT: storage client port`
-* `STORAGE_PASSWORD: storage client password`
-* `STORAGE_DB: storage type db (only for redis)`
 ### broker
 * `BROKER: currently supporting only redis`
 * `BROKER_HOST: queue broker host`

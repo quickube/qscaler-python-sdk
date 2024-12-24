@@ -3,8 +3,8 @@ from typing import Any, List, Tuple
 
 import redis
 
-from gamba.brokers.broker import Broker
-from gamba.configuration.config import config
+from qscaler_sdk.brokers.broker import Broker
+from qscaler_sdk.configuration.config import config
 
 
 class RedisBroker(Broker):

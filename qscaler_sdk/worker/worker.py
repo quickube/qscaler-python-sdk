@@ -1,10 +1,9 @@
 import logging
 from typing import Callable
 
-from gamba.brokers.brokers_factory import BrokersFactory
-from gamba.configuration.config import config
-from gamba.event_loop.event_loop import EventLoop, GracefulShutdown
-from gamba.results_storage.results_storage_factory import ResultsStoragesFactory
+from qscaler_sdk.brokers.brokers_factory import BrokersFactory
+from qscaler_sdk.configuration.config import config
+from qscaler_sdk.event_loop.event_loop import EventLoop, GracefulShutdown
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +12,6 @@ class Worker:
 
     def __init__(self, queue: str):
         self.broker = BrokersFactory.get_broker(config.broker.type)
-        self.results_storage = ResultsStoragesFactory.get_storage(config.storage.type)
         self.queue = queue
         self.act = None
         self.extra_termination = None
@@ -51,6 +49,4 @@ class Worker:
         queue, data = self.broker.get_message([self.kill_queue, self.queue])
         if queue == self.kill_queue:
             raise GracefulShutdown
-        task_id = data['task_id']
-        results = self.act(data['data'])
-        self.results_storage.set(task_id, results)
+        self.act(data['data'])
