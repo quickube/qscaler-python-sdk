@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "qscaler-sdk
+name = "qscaler-sdk"
 version = "0.1.0"
 description = ""
 authors = ["Omri Assa <omriassa@gmail.com>"]
