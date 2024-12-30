@@ -19,6 +19,7 @@ def _load_namespace_from_file():
 @dataclass
 class Config:
     qworker_name: str = field(default=os.getenv("QWORKER_NAME"))
+    msg_timeout: int = field(default=os.getenv("MESSAGE_TIMEOUT", 10))
     pod_name: str = field(default=os.getenv("HOSTNAME"))
     namespace: str = field(default_factory=lambda: _load_namespace_from_file())
     k8s_api_group: str = field(default=os.getenv("K8S_API_GROUP", "quickube.com"))

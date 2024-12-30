@@ -34,7 +34,7 @@ class RedisBroker(Broker):
 
     def _get_message(self, queues: List[str]) -> Optional[bytes]:
         """get single message from the kill queue or the task queue"""
-        val = self.redis_client.brpop(queues, timeout=10)
+        val = self.redis_client.brpop(queues, timeout=config.msg_timeout)
         if val is None:
             logger.info("didn't find msg for {timeout} seconds, will try again")
             return None
