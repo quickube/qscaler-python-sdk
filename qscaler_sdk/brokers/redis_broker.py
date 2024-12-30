@@ -1,11 +1,15 @@
+import logging
 import pickle
-from typing import Any, List
+from typing import Any, List, Optional
 
 import redis
 
 from qscaler_sdk.brokers.broker import Broker
 from qscaler_sdk.configuration.config import config
 
+
+logger = logging.getLogger(__name__)
+logger.setLevel("DEBUG")
 
 class RedisBroker(Broker):
     redis_client = None
@@ -28,10 +32,13 @@ class RedisBroker(Broker):
         """Publish task to the given task queue."""
         self.redis_client.lpush(queue, data)
 
-    def _get_message(self, queues: List[str]) -> bytes:
+    def _get_message(self, queues: List[str]) -> Optional[bytes]:
         """get single message from the kill queue or the task queue"""
-        _, val = self.redis_client.brpop(queues, timeout=0)
-        return val
+        val = self.redis_client.brpop(queues, timeout=10)
+        if val is None:
+            logger.info("didn't find msg for {timeout} seconds, will try again")
+            return None
+        return val[1]
 
     def close(self):
         """Close the Redis connection."""

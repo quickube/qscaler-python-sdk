@@ -1,9 +1,11 @@
 import os
 from dataclasses import field, dataclass
 
+from pydantic import BaseModel
+
 from qscaler_sdk.k8s.k8s_client import K8sClient
 from qscaler_sdk.k8s.qworker import QWorker
-from qscaler_sdk.k8s.scaler_config import ScalerConfig
+from qscaler_sdk.k8s.scaler_config import ScalerConfig, ValueOrSecret
 
 
 def _load_namespace_from_file():
@@ -28,8 +30,10 @@ class Config:
 
     @property
     def scaler_config(self) -> ScalerConfig:
-        return k8s_client.get_scaler_config(self.qworker.config.scalerConfigRef)
+        scaler_config = k8s_client.get_scaler_config(self.qworker.config.scalerConfigRef)
+        scaler_config.load_secrets()
+        return scaler_config
 
 
 config = Config()
-k8s_client = K8sClient(api_group=config.k8s_api_group,api_version=config.k8s_api_version,namespace=config.namespace)
+k8s_client = K8sClient(api_group=config.k8s_api_group, api_version=config.k8s_api_version, namespace=config.namespace)

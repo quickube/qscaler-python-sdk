@@ -1,8 +1,9 @@
 import logging
+from base64 import b64decode
+from typing import Any
 
 from kubernetes import client, config as cluster_config
 from kubernetes.client.rest import ApiException
-from pydantic import BaseModel
 
 from qscaler_sdk.k8s.qworker import QWorker, ScaleConfig, QWorkerStatus
 from qscaler_sdk.k8s.scaler_config import ScalerConfig, ScalerConfigConfig
@@ -11,9 +12,10 @@ from qscaler_sdk.utils.singleton import SingletonMeta
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
 
+
 class K8sClient(metaclass=SingletonMeta):
 
-    def __init__(self, api_group, api_version, namespace:str):
+    def __init__(self, api_group, api_version, namespace: str):
         cluster_config.load_incluster_config()
         self.api_group = api_group
         self.api_version = api_version
@@ -50,7 +52,7 @@ class K8sClient(metaclass=SingletonMeta):
         except ApiException as e:
             print(f"Error retrieving qworker CR: {e.status} - {e.reason}")
 
-    def remove_owner_ref(self, name:str):
+    def remove_owner_ref(self, name: str):
         v1 = client.CoreV1Api()
         pod = v1.read_namespaced_pod(name=name, namespace=self.namespace)
 
@@ -61,3 +63,14 @@ class K8sClient(metaclass=SingletonMeta):
         body = {"metadata": {"ownerReferences": []}}
         response = v1.patch_namespaced_pod(name=name, namespace=self.namespace, body=body)
         logger.info(f"Removed owner references for pod {name}. Response: {response}")
+
+    def extract_secret_value(self, name: str, key: str) -> Any:
+        v1 = client.CoreV1Api()
+        secret = v1.read_namespaced_secret(name=name, namespace=self.namespace)
+        value = self._decode_secret(secret.data[key])
+        return value
+
+    @staticmethod
+    def _decode_secret(value: str):
+        return b64decode(value).decode()
+

@@ -27,6 +27,8 @@ class Worker:
     def work(self):
         logger.info("fetching work...")
         data = self.broker.get_message(self.queue)
+        if data is None:
+            return
         logger.info("doing work...")
         self.act(data)
 
@@ -38,6 +40,7 @@ class Worker:
 
     def should_i_die(self):
         if config.qworker.status.diff < 0:
+            logger.info("got diff in qworker config, starting graceful shutdown...")
             return True
         return False
 

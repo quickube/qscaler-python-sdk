@@ -1,3 +1,4 @@
+import logging
 import signal
 from typing import Callable
 
@@ -5,6 +6,8 @@ from typing import Callable
 class GracefulShutdown(Exception):
     pass
 
+logger = logging.getLogger(__name__)
+logger.setLevel("DEBUG")
 
 class EventLoop:
     def __init__(self, death_check: Callable, work: Callable, graceful_shutdown: Callable):
@@ -24,4 +27,5 @@ class EventLoop:
             self.graceful_shutdown()
 
     def exit_gracefully(self, *args, **kwargs):
+        logger.info("got sigterm/sigint, starting shutdown process...")
         raise GracefulShutdown
