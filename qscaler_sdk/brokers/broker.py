@@ -1,8 +1,8 @@
 from abc import ABC
 from abc import abstractmethod
-from typing import Any, List, Tuple
+from typing import Any, List
 
-from qscaler_sdk.utils.singleton import SingletonMeta
+from qscaler_sdk.utils.singleton import SingletonMeta)
 
 
 class Broker(ABC, metaclass=SingletonMeta):
@@ -11,16 +11,16 @@ class Broker(ABC, metaclass=SingletonMeta):
         serialized_data = self._serialize(data)
         self._publish(queue, serialized_data)
 
-    def get_message(self, queues: List[str]) -> Tuple[str, Any]:
-        queue, data = self._get_message(queues)
-        return queue, self._deserialize(data)
+    def get_message(self, queues: List[str]) -> Any:
+        serialized_data = self._get_message(queues)
+        return self._deserialize(serialized_data)
 
     @abstractmethod
     def _publish(self, queue: str, data: bytes):
         pass
 
     @abstractmethod
-    def _get_message(self, queues: List[str]) -> Tuple[str, bytes]:
+    def _get_message(self, queues: List[str]) -> bytes:
         pass
 
     @abstractmethod

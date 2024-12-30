@@ -1,5 +1,5 @@
 import pickle
-from typing import Any, List, Tuple
+from typing import Any, List
 
 import redis
 
@@ -14,10 +14,10 @@ class RedisBroker(Broker):
         """Initialize the Redis connection, but only once."""
         if self.redis_client is None:
             self.redis_client = redis.Redis(
-                host=config.broker.host,
-                port=config.broker.port,
-                password=config.broker.password,
-                db=config.broker.db,
+                host=config.scaler_config.config.host,
+                port=config.scaler_config.config.port,
+                password=config.scaler_config.config.password.value,
+                db=config.scaler_config.config.db,
             )
 
     def is_connected(self) -> bool:
@@ -28,10 +28,10 @@ class RedisBroker(Broker):
         """Publish task to the given task queue."""
         self.redis_client.lpush(queue, data)
 
-    def _get_message(self, queues: List[str]) -> Tuple[str, Any]:
+    def _get_message(self, queues: List[str]) -> bytes:
         """get single message from the kill queue or the task queue"""
-        key, val = self.redis_client.brpop(queues, timeout=0)
-        return str(key), val
+        _, val = self.redis_client.brpop(queues, timeout=0)
+        return val
 
     def close(self):
         """Close the Redis connection."""

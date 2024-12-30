@@ -1,4 +1,5 @@
 import signal
+from typing import Callable
 
 
 class GracefulShutdown(Exception):
@@ -6,18 +7,21 @@ class GracefulShutdown(Exception):
 
 
 class EventLoop:
-    def __init__(self, func, exit_function):
-        self.exit_function = exit_function
-        self.func = func
+    def __init__(self, death_check: Callable, work: Callable, graceful_shutdown: Callable):
+        self.death_check = death_check
+        self.work = work
+        self.graceful_shutdown = graceful_shutdown
         signal.signal(signal.SIGINT, self.exit_gracefully)
         signal.signal(signal.SIGTERM, self.exit_gracefully)
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self):
         try:
             while True:
-                self.func(*args, **kwargs)
+                if self.death_check():
+                    self.exit_gracefully()
+                self.work()
         except GracefulShutdown:
-            self.exit_function()
+            self.graceful_shutdown()
 
-    def exit_gracefully(self, signum, frame):
+    def exit_gracefully(self, *args, **kwargs):
         raise GracefulShutdown
