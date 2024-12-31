@@ -2,8 +2,9 @@ import logging
 from typing import Callable
 
 from qscaler_sdk.brokers.brokers_factory import BrokersFactory
-from qscaler_sdk.configuration.config import config, k8s_client
+from qscaler_sdk.configuration.config import config
 from qscaler_sdk.event_loop.event_loop import EventLoop
+from qscaler_sdk.k8s.k8s_client import k8s_client
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
@@ -11,17 +12,17 @@ logger.setLevel("DEBUG")
 class Worker:
 
     def __init__(self):
-        self.broker = BrokersFactory.get_broker(config.scaler_config.type)
+        self.broker = BrokersFactory.get_broker(k8s_client.scaler_config.type)
         self.act = None
         self.extra_termination = None
 
     @property
     def queue(self):
-        return config.qworker.config.queue
+        return k8s_client.qworker.config.queue
 
     def run(self):
         logger.info("starting worker...")
-        event_loop = EventLoop(death_check=self.should_i_die, work=self.work, graceful_shutdown=self.graceful_shutdown)
+        event_loop = EventLoop(check_for_death=self.should_i_die, work=self.work, graceful_shutdown=self.graceful_shutdown)
         event_loop()
 
     def work(self):
@@ -39,7 +40,7 @@ class Worker:
         self.broker.close()
 
     def should_i_die(self):
-        if config.qworker.status.diff < 0:
+        if k8s_client.qworker.status.diff < 0:
             logger.info("got diff in qworker config, starting graceful shutdown...")
             return True
         return False

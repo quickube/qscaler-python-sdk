@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
 
 class EventLoop:
-    def __init__(self, death_check: Callable, work: Callable, graceful_shutdown: Callable):
-        self.death_check = death_check
+    def __init__(self, check_for_death: Callable, work: Callable, graceful_shutdown: Callable):
+        self.check_for_death = check_for_death
         self.work = work
         self.graceful_shutdown = graceful_shutdown
         signal.signal(signal.SIGINT, self.exit_gracefully)
@@ -19,10 +19,9 @@ class EventLoop:
 
     def __call__(self):
         try:
-            while True:
-                if self.death_check():
-                    self.exit_gracefully()
+            while not self.check_for_death():
                 self.work()
+            self.exit_gracefully()
         except GracefulShutdown:
             self.graceful_shutdown()
 

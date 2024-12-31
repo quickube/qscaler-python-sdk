@@ -6,7 +6,7 @@ import redis
 
 from qscaler_sdk.brokers.broker import Broker
 from qscaler_sdk.configuration.config import config
-
+from qscaler_sdk.k8s.k8s_client import k8s_client
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
@@ -18,10 +18,10 @@ class RedisBroker(Broker):
         """Initialize the Redis connection, but only once."""
         if self.redis_client is None:
             self.redis_client = redis.Redis(
-                host=config.scaler_config.config.host,
-                port=config.scaler_config.config.port,
-                password=config.scaler_config.config.password.value,
-                db=config.scaler_config.config.db,
+                host=k8s_client.scaler_config.config.host,
+                port=k8s_client.scaler_config.config.port,
+                password=k8s_client.scaler_config.config.password.value,
+                db=k8s_client.scaler_config.config.db,
             )
 
     def is_connected(self) -> bool:

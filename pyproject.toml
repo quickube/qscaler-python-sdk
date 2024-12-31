@@ -11,15 +11,12 @@ redis = "*"
 kubernetes = "^31.0.0"
 pydantic = "^2.10.4"
 
-
-[tool.poetry.scripts]
-tests = 'pytest:main'
-
 [tool.poetry.group.test]
 optional = true
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
+pytest-mock = "*"
 
 [build-system]
 requires = ["poetry-core"]
