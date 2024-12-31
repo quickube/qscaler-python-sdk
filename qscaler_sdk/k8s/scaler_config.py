@@ -5,18 +5,13 @@ from pydantic import BaseModel
 from qscaler_sdk.configuration.config import k8s_client
 
 
-class SecretKeyRef(BaseModel):
+class Secret(BaseModel):
     name: str
     key: str
 
-
-class ValueFrom(BaseModel):
-    secretKeyRef: SecretKeyRef
-
-
 class ValueOrSecret(BaseModel):
     value: Optional[str] = None
-    valueFrom: Optional[ValueFrom] = None
+    secret: Optional[Secret] = None
 
 
 class ScalerConfigConfig(BaseModel):
@@ -39,7 +34,6 @@ class ScalerConfig:
         for field_name, _ in model.__fields__.items():
             field = getattr(model, field_name)
             if isinstance(field, ValueOrSecret) and (field.value is None):
-                secret_ref = field.valueFrom.secretKeyRef
-                field.value = k8s_client.extract_secret_value(name=secret_ref.name, key=secret_ref.key)
+                field.value = k8s_client.extract_secret_value(name=field.secret.name, key=field.secret.key)
                 setattr(model, field_name, field)
         self.config = model
