@@ -6,7 +6,7 @@ metadata:
   name: qworker-example
 spec:
   podSpec:
-    serviceAccountName: qworker
+    serviceAccountName: qscaler-worker
     containers:
       - name: pyworker
         image: localhost:5001/worker:0.0.1

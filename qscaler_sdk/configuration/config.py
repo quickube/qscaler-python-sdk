@@ -3,12 +3,12 @@ from dataclasses import field, dataclass
 
 
 def _load_namespace_from_file():
-    print("not mocked")
     try:
         with open("/var/run/secrets/kubernetes.io/serviceaccount/namespace", "r") as f:
             return f.read().strip()
     except FileNotFoundError:
         raise RuntimeError("Namespace file not found. Are you running in a Kubernetes cluster?")
+
 
 
 @dataclass

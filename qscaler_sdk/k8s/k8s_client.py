@@ -16,7 +16,7 @@ logger.setLevel("DEBUG")
 
 class K8sClient(metaclass=SingletonMeta):
 
-    def __init__(self, namespace: str, api_version: str, api_group: str = "quikcube.com"):
+    def __init__(self, namespace: str, api_version: str, api_group: str = "quickube.com"):
         cluster_config.load_incluster_config()
         self.api_group = api_group
         self.api_version = api_version
@@ -24,7 +24,7 @@ class K8sClient(metaclass=SingletonMeta):
 
     @property
     def qworker(self):
-        return self._get_qworker(config.qworker.name)
+        return self._get_qworker(config.qworker_name)
 
     @property
     def scaler_config(self) -> ScalerConfig:
@@ -45,7 +45,8 @@ class K8sClient(metaclass=SingletonMeta):
             return QWorker(name=name, config=ScaleConfig(**crd['spec']['scaleConfig']),
                            status=QWorkerStatus(**crd['status']))
         except ApiException as e:
-            print(f"Error retrieving qworker CR: {e.status} - {e.reason}")
+            logger.error(f"Error retrieving qworker CR: {e.status} - {e.reason}")
+            raise e
 
     def _get_scaler_config(self, name: str) -> ScalerConfig:
         api_instance = client.CustomObjectsApi()
@@ -62,7 +63,8 @@ class K8sClient(metaclass=SingletonMeta):
                                 config=ScalerConfigConfig(**crd['spec']['config']),
                                 k8s_client=self)
         except ApiException as e:
-            print(f"Error retrieving qworker CR: {e.status} - {e.reason}")
+            logger.error(f"Error retrieving qworker CR: {e.status} - {e.reason}")
+            raise e
 
     def remove_owner_ref(self, name: str):
         v1 = client.CoreV1Api()
@@ -85,6 +87,27 @@ class K8sClient(metaclass=SingletonMeta):
     @staticmethod
     def _decode_secret(value: str):
         return b64decode(value).decode()
+
+    def _check_rbac_permissions(self, verb, resource, resource_name=None):
+        try:
+            auth_api = client.AuthorizationV1Api()
+            ssar = client.V1SelfSubjectAccessReview(
+                spec=client.V1SelfSubjectAccessReviewSpec(
+                    resource_attributes=client.V1ResourceAttributes(
+                        namespace=self.namespace,
+                        verb=verb,
+                        group=self.api_group,
+                        resource=resource,
+                        name=resource_name
+                    )
+                )
+            )
+            response = auth_api.create_self_subject_access_review(ssar)
+            print(response)
+        except ApiException as e:
+            print(f"API Exception: {e}")
+            raise e
+
 
 
 k8s_client = K8sClient(api_version=config.k8s_api_version, namespace=config.namespace)
