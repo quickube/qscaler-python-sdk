@@ -18,10 +18,15 @@ optional = true
 pytest = "*"
 pytest-mock = "*"
 
+[tool.poetry.group.lint]
+optional = true
+
+[tool.poetry.group.lint.dependencies]
+ruff = "*"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
 
 [tool.ruff]
 line-length = 88

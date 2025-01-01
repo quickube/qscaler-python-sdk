@@ -8,3 +8,11 @@ local-build:
 .PHONY: deploy
 deploy: local-build
 	kubectl apply -f ./examples/qworker.yaml
+
+.PHONY: lint
+lint:
+	poetry run ruff check .
+
+.PHONY: test
+test:
+	poetry run pytest

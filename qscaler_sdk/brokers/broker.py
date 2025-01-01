@@ -13,7 +13,8 @@ class Broker(ABC, metaclass=SingletonMeta):
 
     def get_message(self, queues: List[str]) -> Optional[Any]:
         serialized_data = self._get_message(queues)
-        if serialized_data is None: return None
+        if serialized_data is None:
+            return None
         return self._deserialize(serialized_data)
 
     @abstractmethod
