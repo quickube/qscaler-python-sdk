@@ -98,3 +98,5 @@ class K8sClient(metaclass=SingletonMeta):
         except ApiException as e:
             print(f"API Exception: {e}")
             raise e
+
+k8s_client = K8sClient()

@@ -47,7 +47,8 @@ class Worker:
 
     def should_i_die(self):
         self.qworker.update()
-        if self.qworker.status.desiredReplicas - self.qworker.status.currentReplicas < 0:
+        if (self.qworker.status.desiredReplicas - self.qworker.status.currentReplicas < 0 |
+                config.pod_spec_hash != self.qworker.status.podSpecHash):
             logger.info("got diff in qworker config, starting graceful shutdown...")
             return True
         return False

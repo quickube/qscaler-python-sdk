@@ -16,10 +16,7 @@ class ScaleConfig(BaseModel):
 class QWorkerStatus(BaseModel):
     currentReplicas: int
     desiredReplicas: int
-
-    @property
-    def diff(self) -> int:
-        return self.desiredReplicas - self.currentReplicas
+    currentPodSpecHash: str
 
 
 class QWorker(metaclass=SingletonMeta):

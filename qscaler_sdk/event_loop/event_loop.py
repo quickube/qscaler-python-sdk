@@ -23,7 +23,7 @@ class EventLoop:
         try:
             while not self.check_for_death():
                 self.work()
-            self.exit_gracefully()
+            self.exit_gracefully(self)
         except GracefulShutdown:
             self.graceful_shutdown()
 
