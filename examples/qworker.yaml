@@ -10,12 +10,9 @@ spec:
     containers:
       - name: pyworker
         image: localhost:5001/worker:0.0.1
-        env:
-          - name: QWORKER_NAME
-            value: "qworker-example"
   scaleConfig:
     queue: "queue1"
-    minReplicas: 2
-    maxReplicas: 20
+    minReplicas: 1
+    maxReplicas: 5
     scalerConfigRef: redis-config
     scalingFactor: 1

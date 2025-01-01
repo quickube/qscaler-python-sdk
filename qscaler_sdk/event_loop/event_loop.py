@@ -6,8 +6,10 @@ from typing import Callable
 class GracefulShutdown(Exception):
     pass
 
+
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
+
 
 class EventLoop:
     def __init__(self, check_for_death: Callable, work: Callable, graceful_shutdown: Callable):
@@ -25,6 +27,7 @@ class EventLoop:
         except GracefulShutdown:
             self.graceful_shutdown()
 
+    @staticmethod
     def exit_gracefully(self, *args, **kwargs):
         logger.info("got sigterm/sigint, starting shutdown process...")
         raise GracefulShutdown

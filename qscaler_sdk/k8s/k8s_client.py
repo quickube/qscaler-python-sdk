@@ -5,9 +5,6 @@ from typing import Any
 from kubernetes import client, config as cluster_config
 from kubernetes.client.rest import ApiException
 
-from qscaler_sdk.configuration.config import config
-from qscaler_sdk.k8s.qworker import QWorker, ScaleConfig, QWorkerStatus
-from qscaler_sdk.k8s.scaler_config import ScalerConfig, ScalerConfigConfig
 from qscaler_sdk.utils.singleton import SingletonMeta
 
 logger = logging.getLogger(__name__)
@@ -16,23 +13,21 @@ logger.setLevel("DEBUG")
 
 class K8sClient(metaclass=SingletonMeta):
 
-    def __init__(self, namespace: str, api_version: str, api_group: str = "quickube.com"):
+    def __init__(self):
         cluster_config.load_incluster_config()
-        self.api_group = api_group
-        self.api_version = api_version
-        self.namespace = namespace
+        self.api_group = "quickube.com"
+        self.api_version = "v1alpha1"
+        self.namespace = self._load_namespace_from_file()
 
-    @property
-    def qworker(self):
-        return self._get_qworker(config.qworker_name)
+    @staticmethod
+    def _load_namespace_from_file(self):
+        try:
+            with open("/var/run/secrets/kubernetes.io/serviceaccount/namespace", "r") as f:
+                return f.read().strip()
+        except FileNotFoundError:
+            raise RuntimeError("Namespace file not found. Are you running in a Kubernetes cluster?")
 
-    @property
-    def scaler_config(self) -> ScalerConfig:
-        scaler_config = self._get_scaler_config(self.qworker.config.scalerConfigRef)
-        scaler_config.load_secrets()
-        return scaler_config
-
-    def _get_qworker(self, name: str) -> QWorker:
+    def get_qworker(self, name: str) -> dict:
         api_instance = client.CustomObjectsApi()
         try:
             crd = api_instance.get_namespaced_custom_object(
@@ -42,13 +37,12 @@ class K8sClient(metaclass=SingletonMeta):
                 plural="qworkers",
                 name=name
             )
-            return QWorker(name=name, config=ScaleConfig(**crd['spec']['scaleConfig']),
-                           status=QWorkerStatus(**crd['status']))
+            return crd
         except ApiException as e:
             logger.error(f"Error retrieving qworker CR: {e.status} - {e.reason}")
             raise e
 
-    def _get_scaler_config(self, name: str) -> ScalerConfig:
+    def get_scaler_config(self, name: str) -> dict:
         api_instance = client.CustomObjectsApi()
         try:
             crd = api_instance.get_namespaced_custom_object(
@@ -58,10 +52,7 @@ class K8sClient(metaclass=SingletonMeta):
                 plural="scalerconfigs",
                 name=name
             )
-            return ScalerConfig(name=name,
-                                type=crd['spec']['type'],
-                                config=ScalerConfigConfig(**crd['spec']['config']),
-                                k8s_client=self)
+            return crd
         except ApiException as e:
             logger.error(f"Error retrieving qworker CR: {e.status} - {e.reason}")
             raise e
@@ -107,7 +98,3 @@ class K8sClient(metaclass=SingletonMeta):
         except ApiException as e:
             print(f"API Exception: {e}")
             raise e
-
-
-
-k8s_client = K8sClient(api_version=config.k8s_api_version, namespace=config.namespace)

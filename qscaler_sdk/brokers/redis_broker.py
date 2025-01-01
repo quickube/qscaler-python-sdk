@@ -6,22 +6,24 @@ import redis
 
 from qscaler_sdk.brokers.broker import Broker
 from qscaler_sdk.configuration.config import config
-from qscaler_sdk.k8s.k8s_client import k8s_client
+from qscaler_sdk.k8s.scaler_config import ScalerConfig
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
+
 
 class RedisBroker(Broker):
     redis_client = None
 
     def __init__(self):
         """Initialize the Redis connection, but only once."""
+        self.scaler_config = ScalerConfig()
         if self.redis_client is None:
             self.redis_client = redis.Redis(
-                host=k8s_client.scaler_config.config.host,
-                port=k8s_client.scaler_config.config.port,
-                password=k8s_client.scaler_config.config.password.value,
-                db=k8s_client.scaler_config.config.db,
+                host=self.scaler_config.spec.config.host,
+                port=self.scaler_config.spec.config.port,
+                password=self.scaler_config.spec.config.password.value,
+                # db=self.scaler_config.spec.config.db,  # missing in the go struct
             )
 
     def is_connected(self) -> bool:
@@ -34,7 +36,7 @@ class RedisBroker(Broker):
 
     def _get_message(self, queues: List[str]) -> Optional[bytes]:
         """get single message from the kill queue or the task queue"""
-        val = self.redis_client.brpop(queues, timeout=config.msg_timeout)
+        val = self.redis_client.brpop(queues, timeout=config.pulling_interval)
         if val is None:
             logger.info("didn't find msg for {timeout} seconds, will try again")
             return None

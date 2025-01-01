@@ -6,5 +6,5 @@ local-build:
 	docker push localhost:5001/worker:0.0.1
 
 .PHONY: deploy
-deploy:
+deploy: local-build
 	kubectl apply -f ./examples/qworker.yaml

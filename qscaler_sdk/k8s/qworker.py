@@ -1,5 +1,9 @@
 from pydantic import BaseModel
 
+from qscaler_sdk.configuration.config import config
+from qscaler_sdk.k8s.k8s_client import K8sClient
+from qscaler_sdk.utils.singleton import SingletonMeta
+
 
 class ScaleConfig(BaseModel):
     queue: str
@@ -18,9 +22,20 @@ class QWorkerStatus(BaseModel):
         return self.desiredReplicas - self.currentReplicas
 
 
-class QWorker:
+class QWorker(metaclass=SingletonMeta):
 
-    def __init__(self, name: str, config: ScaleConfig, status: QWorkerStatus):
-        self.name = name
-        self.config = config
-        self.status = status
+    def __init__(self):
+        self.name = config.qworker_name
+        self.k8s_client = K8sClient()
+        self.crd = self.k8s_client.get_qworker(self.name)
+
+    @property
+    def status(self) -> QWorkerStatus:
+        return QWorkerStatus(**self.crd['status'])
+
+    @property
+    def config(self) -> ScaleConfig:
+        return ScaleConfig(**self.crd['spec']['scaleConfig'])
+
+    def update(self):
+        self.crd = self.k8s_client.get_qworker(self.name)
