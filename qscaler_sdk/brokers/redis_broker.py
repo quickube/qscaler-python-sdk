@@ -6,7 +6,7 @@ import redis
 
 from qscaler_sdk.brokers.broker import Broker
 from qscaler_sdk.configuration.config import config
-from qscaler_sdk.k8s.scaler_config import ScalerConfig
+from qscaler_sdk.models.scaler_config import ScalerConfig
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")

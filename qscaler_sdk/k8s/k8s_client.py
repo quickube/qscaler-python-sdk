@@ -20,7 +20,7 @@ class K8sClient(metaclass=SingletonMeta):
         self.namespace = self._load_namespace_from_file()
 
     @staticmethod
-    def _load_namespace_from_file(self):
+    def _load_namespace_from_file():
         try:
             with open("/var/run/secrets/kubernetes.io/serviceaccount/namespace", "r") as f:
                 return f.read().strip()
@@ -78,25 +78,3 @@ class K8sClient(metaclass=SingletonMeta):
     @staticmethod
     def _decode_secret(value: str):
         return b64decode(value).decode()
-
-    def _check_rbac_permissions(self, verb, resource, resource_name=None):
-        try:
-            auth_api = client.AuthorizationV1Api()
-            ssar = client.V1SelfSubjectAccessReview(
-                spec=client.V1SelfSubjectAccessReviewSpec(
-                    resource_attributes=client.V1ResourceAttributes(
-                        namespace=self.namespace,
-                        verb=verb,
-                        group=self.api_group,
-                        resource=resource,
-                        name=resource_name
-                    )
-                )
-            )
-            response = auth_api.create_self_subject_access_review(ssar)
-            print(response)
-        except ApiException as e:
-            print(f"API Exception: {e}")
-            raise e
-
-k8s_client = K8sClient()

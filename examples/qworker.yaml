@@ -9,7 +9,8 @@ spec:
     serviceAccountName: qscaler-worker
     containers:
       - name: pyworker
-        image: localhost:5001/worker:0.0.1
+        image: localhost:5001/worker:latest
+        imagePullPolicy: Always
   scaleConfig:
     queue: "queue1"
     minReplicas: 1

@@ -4,8 +4,9 @@ from typing import Callable
 from qscaler_sdk.brokers.brokers_factory import BrokersFactory
 from qscaler_sdk.configuration.config import config
 from qscaler_sdk.event_loop.event_loop import EventLoop
-from qscaler_sdk.k8s.k8s_client import k8s_client
-from qscaler_sdk.k8s.qworker import QWorker
+from qscaler_sdk.k8s.k8s_client import K8sClient
+from qscaler_sdk.models.qworker import QWorker
+from qscaler_sdk.models.scaler_config import ScalerConfig
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
@@ -14,10 +15,12 @@ logger.setLevel("DEBUG")
 class Worker:
 
     def __init__(self):
-        self.broker = BrokersFactory.get_broker(k8s_client.scaler_config.type)
         self.act = None
         self.extra_termination = None
         self.qworker = QWorker()
+        self.scaler_config = ScalerConfig()
+        self.broker = BrokersFactory.get_broker(self.scaler_config.spec.type)
+        self.k8s_client = K8sClient()
 
     @property
     def queue(self):
@@ -41,14 +44,16 @@ class Worker:
 
     def graceful_shutdown(self):
         logger.info("starting graceful shutdown...")
-        k8s_client.remove_owner_ref(config.pod_name)
+        self.k8s_client.remove_owner_ref(config.pod_name)
         self.extra_termination()
         self.broker.close()
 
     def should_i_die(self):
         self.qworker.update()
-        if (self.qworker.status.desiredReplicas - self.qworker.status.currentReplicas < 0 |
-                config.pod_spec_hash != self.qworker.status.podSpecHash):
+
+        pod_hash_changed = config.pod_spec_hash != self.qworker.status.currentPodSpecHash
+        desired_pod_count = self.qworker.status.desiredReplicas - self.qworker.status.currentReplicas
+        if desired_pod_count < 0 or pod_hash_changed:
             logger.info("got diff in qworker config, starting graceful shutdown...")
             return True
         return False

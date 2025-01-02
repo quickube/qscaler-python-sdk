@@ -1,9 +1,10 @@
-from typing import Optional
+from typing import Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from qscaler_sdk.k8s.k8s_client import K8sClient
-from qscaler_sdk.k8s.qworker import QWorker
+from qscaler_sdk.models.qworker import QWorker
+from qscaler_sdk.utils.singleton import SingletonMeta
 
 
 class Secret(BaseModel):
@@ -43,10 +44,21 @@ class ScalerConfigSpec(BaseModel):
     Represents the spec section of ScalerConfig.
     """
     type: str = Field(..., description="Type of scaler (e.g., Redis).")
-    config: ScalerTypeConfigs = Field(..., description="Specific configuration for the scaler type.")
+    config: Union[RedisConfig, dict] = Field(..., description="Specific configuration for the scaler type.")
+
+    @model_validator(mode="after")
+    def parse_config(self):
+        if self.type == "redis":
+            if not isinstance(self.config, RedisConfig):
+                self.config = RedisConfig(host=self.config['host'],
+                                          port=self.config['port'],
+                                          password=self.config['password'])
+        else:
+            raise NotImplementedError(f"Scaler type '{self.type}' is not implemented.")
+        return self
 
 
-class ScalerConfig:
+class ScalerConfig(metaclass=SingletonMeta):
 
     def __init__(self):
         qworker = QWorker()
@@ -57,14 +69,14 @@ class ScalerConfig:
 
     @property
     def spec(self):
-        return ScalerConfigSpec(**self.crd['spec'])
+        return ScalerConfigSpec(type=self.crd['spec']['type'], config=self.crd['spec']['config'])
 
     def _replace_secrets_with_values(self):
-        model = self.spec
+        model = self.spec.config
         for field_name, _ in model.model_fields.items():
             field = getattr(model, field_name)
             if isinstance(field, ValueOrSecret) and (field.secret is not None):
                 field.value = self.k8s_client.extract_secret_value(name=field.secret.name, key=field.secret.key)
                 setattr(model, field_name, field)
                 field.secret = None
-        self.crd = model
+        self.crd['spec']['config'] = model
