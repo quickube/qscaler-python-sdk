@@ -8,24 +8,28 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 redis = "*"
-
-
-[tool.poetry.scripts]
-tests = 'pytest:main'
+kubernetes = "^31.0.0"
+pydantic = "^2.10.4"
 
 [tool.poetry.group.test]
 optional = true
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
+pytest-mock = "*"
+
+[tool.poetry.group.lint]
+optional = true
+
+[tool.poetry.group.lint.dependencies]
+ruff = "*"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-
 [tool.ruff]
 line-length = 88
-select = ["E", "F"]
-ignore = ["E501"]
+lint.select = ["E", "F"]
+lint.ignore = ["E501"]
 exclude = ["build"]

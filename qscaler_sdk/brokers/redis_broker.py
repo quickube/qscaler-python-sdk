@@ -1,10 +1,15 @@
+import logging
 import pickle
-from typing import Any, List, Tuple
+from typing import Any, List, Optional
 
 import redis
 
 from qscaler_sdk.brokers.broker import Broker
 from qscaler_sdk.configuration.config import config
+from qscaler_sdk.models.scaler_config import ScalerConfig
+
+logger = logging.getLogger(__name__)
+logger.setLevel("DEBUG")
 
 
 class RedisBroker(Broker):
@@ -12,12 +17,13 @@ class RedisBroker(Broker):
 
     def __init__(self):
         """Initialize the Redis connection, but only once."""
+        self.scaler_config = ScalerConfig()
         if self.redis_client is None:
             self.redis_client = redis.Redis(
-                host=config.broker.host,
-                port=config.broker.port,
-                password=config.broker.password,
-                db=config.broker.db,
+                host=self.scaler_config.spec.config.host,
+                port=self.scaler_config.spec.config.port,
+                password=self.scaler_config.spec.config.password.value,
+                # db=self.scaler_config.spec.config.db,  # missing in the go struct
             )
 
     def is_connected(self) -> bool:
@@ -28,10 +34,13 @@ class RedisBroker(Broker):
         """Publish task to the given task queue."""
         self.redis_client.lpush(queue, data)
 
-    def _get_message(self, queues: List[str]) -> Tuple[str, Any]:
+    def _get_message(self, queues: List[str]) -> Optional[bytes]:
         """get single message from the kill queue or the task queue"""
-        key, val = self.redis_client.brpop(queues, timeout=0)
-        return str(key), val
+        val = self.redis_client.brpop(queues, timeout=config.pulling_interval)
+        if val is None:
+            logger.info("didn't find msg for {timeout} seconds, will try again")
+            return None
+        return val[1]
 
     def close(self):
         """Close the Redis connection."""

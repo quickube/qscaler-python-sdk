@@ -3,16 +3,17 @@ kind: QWorker
 metadata:
   labels:
     app.kubernetes.io/name: qworker
-    app.kubernetes.io/managed-by: kustomize
   name: qworker-example
 spec:
   podSpec:
+    serviceAccountName: qscaler-worker
     containers:
       - name: pyworker
-        image: localhost:5001/worker:0.0.1
+        image: localhost:5001/worker:latest
+        imagePullPolicy: Always
   scaleConfig:
     queue: "queue1"
-    minReplicas: 4
-    maxReplicas: 20
+    minReplicas: 1
+    maxReplicas: 5
     scalerConfigRef: redis-config
     scalingFactor: 1

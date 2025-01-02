@@ -1,34 +1,13 @@
 import os
 from dataclasses import field, dataclass
-from enum import Enum
-
-
-class Brokers(Enum):
-    REDIS = "redis"
-
-
-@dataclass
-class BrokerConfig:
-    type: str = field(default=os.getenv("BROKER"))
-    host: str = field(default=os.getenv("BROKER_HOST"))
-    port: int = field(default_factory=lambda: int(os.getenv("BROKER_PORT", -1)))
-    password: str = field(default=os.getenv("BROKER_PASSWORD"))
-    db: str = field(default=os.getenv("BROKER_DB"))
-
-    def __post_init__(self):
-        if self.type == Brokers.REDIS.value:
-            self._redis_validations()
-        else:
-            self.type = Brokers.REDIS.value
-
-    def _redis_validations(self):
-        assert self.db is not None, "redis db must be entered"
 
 
 @dataclass
 class Config:
-    broker: BrokerConfig = field(default_factory=lambda: BrokerConfig())
-    queue: str = field(default=os.getenv("QUEUE_NAME"))
+    qworker_name: str = field(default=os.getenv("QWORKER_NAME"))
+    pulling_interval: int = field(default=os.getenv("PULLING_INTERVAL", 2))
+    pod_name: str = field(default=os.getenv("HOSTNAME"))  # in K8s it is the name of the pod
+    pod_spec_hash: str = field(default=os.getenv("POD_SPEC_HASH"))
 
 
 config = Config()

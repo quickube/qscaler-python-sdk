@@ -1,0 +1,17 @@
+{
+    "feature": {
+        "network": {
+            "incoming": "mirror",
+            "outgoing": true
+        },
+        "fs": "read",
+        "env": true
+    },
+    "target": {
+        "path": "pod/qworker-example-6b71e9a9-75c6-4e30-9a0b-0cf3e744099f",
+        "namespace": "default"
+    },
+    "agent": {
+        "service_account": "qscaler-worker"
+    }
+}
