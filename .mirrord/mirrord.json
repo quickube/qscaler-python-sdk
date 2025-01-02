@@ -8,10 +8,10 @@
         "env": true
     },
     "target": {
-        "path": "pod/qworker-example-5973cd64-bc80-445e-a9e9-3e47605ae30c",
+        "path": "pod/qworker-example-6b71e9a9-75c6-4e30-9a0b-0cf3e744099f",
         "namespace": "default"
     },
     "agent": {
-        "service_account": "qworker"
+        "service_account": "qscaler-worker"
     }
 }
