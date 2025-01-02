@@ -30,6 +30,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 line-length = 88
-select = ["E", "F"]
-ignore = ["E501"]
+lint.select = ["E", "F"]
+lint.ignore = ["E501"]
 exclude = ["build"]
