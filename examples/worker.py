@@ -19,4 +19,5 @@ def example(task: Dict[str, Any]) -> Any:
 
 if __name__ == "__main__":
     logging.basicConfig()
+    worker.k8s_client.extract_secret_value("redis", "redis-password")
     worker.run()

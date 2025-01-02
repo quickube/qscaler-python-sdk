@@ -28,7 +28,7 @@ class RedisConfig(BaseModel):
     Represents the Redis configuration.
     """
     host: str = Field(..., description="Redis host address.")
-    port: str = Field(..., description="Redis port number.")
+    port: int = Field(..., description="Redis port number.")
     password: Optional[ValueOrSecret] = Field(None, description="Redis password as a value or secret.")
 
 
