@@ -5,6 +5,11 @@ description = ""
 authors = ["Omri Assa <omriassa@gmail.com>"]
 readme = "README.md"
 
+exclude = [
+    "*_test.py",    # Matches files ending with "_test" in any directory
+    "**/*_test.py", # Matches recursively in subdirectories
+]
+
 [tool.poetry.dependencies]
 python = "^3.11"
 redis = "*"
