@@ -45,7 +45,7 @@ class Worker:
     def graceful_shutdown(self):
         logger.info("starting graceful shutdown...")
         self.k8s_client.remove_owner_ref(config.pod_name)
-
+        self.k8s_client.remove_myself(config.pod_name)
         if self.extra_termination:
             self.extra_termination()
         self.broker.close()

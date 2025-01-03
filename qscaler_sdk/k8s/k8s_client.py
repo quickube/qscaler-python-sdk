@@ -65,15 +65,23 @@ class K8sClient(metaclass=SingletonMeta):
             logger.info(f"Pod {name} has no owner references.")
             return
 
-        body = {"metadata": {"ownerReferences": []}}
-        response = v1.patch_namespaced_pod(name=name, namespace=self.namespace, body=body)
-        logger.info(f"Removed owner references for pod {name}. Response: {response}")
+        patch_body = {
+            "metadata": {
+                "ownerReferences": None
+            }
+        }
+        response = v1.patch_namespaced_pod(name=name, namespace=self.namespace, body=patch_body)
+        logger.info(f"Removed owner references for pod {name}")
 
     def extract_secret_value(self, name: str, key: str) -> Any:
         v1 = client.CoreV1Api()
         secret = v1.read_namespaced_secret(name=name, namespace=self.namespace)
         value = self._decode_secret(secret.data[key])
         return value
+
+    def remove_myself(self, name: str):
+        v1 = client.CoreV1Api()
+        v1.delete_namespaced_pod(name=name, namespace=self.namespace)
 
     @staticmethod
     def _decode_secret(value: str):

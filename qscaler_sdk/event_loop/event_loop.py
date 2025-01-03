@@ -2,6 +2,10 @@ import logging
 import signal
 from typing import Callable
 
+import kubernetes
+
+import qscaler_sdk.k8s.k8s_client
+
 
 class GracefulShutdown(Exception):
     pass
@@ -26,6 +30,7 @@ class EventLoop:
             self.exit_gracefully(self)
         except GracefulShutdown:
             self.graceful_shutdown()
+            exit(0)
 
     @staticmethod
     def exit_gracefully(self, *args, **kwargs):
