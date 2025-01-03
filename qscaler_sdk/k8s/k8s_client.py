@@ -79,7 +79,7 @@ class K8sClient(metaclass=SingletonMeta):
         value = self._decode_secret(secret.data[key])
         return value
 
-    def remove_myself(self, name: str):
+    def remove_pod(self, name: str):
         v1 = client.CoreV1Api()
         v1.delete_namespaced_pod(name=name, namespace=self.namespace)
 
