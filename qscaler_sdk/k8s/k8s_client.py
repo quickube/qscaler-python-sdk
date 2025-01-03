@@ -70,7 +70,7 @@ class K8sClient(metaclass=SingletonMeta):
                 "ownerReferences": None
             }
         }
-        response = v1.patch_namespaced_pod(name=name, namespace=self.namespace, body=patch_body)
+        v1.patch_namespaced_pod(name=name, namespace=self.namespace, body=patch_body)
         logger.info(f"Removed owner references for pod {name}")
 
     def extract_secret_value(self, name: str, key: str) -> Any:
