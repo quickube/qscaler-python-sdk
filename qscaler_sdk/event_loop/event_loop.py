@@ -1,9 +1,12 @@
 import logging
 import signal
-from typing import Callable
+from typing import Callable, NoReturn, Union
 
 
 class GracefulShutdown(Exception):
+    pass
+
+class ForceShutdown(Exception):
     pass
 
 
@@ -12,24 +15,40 @@ logger.setLevel("DEBUG")
 
 
 class EventLoop:
-    def __init__(self, check_for_death: Callable, work: Callable, graceful_shutdown: Callable):
+    """
+    on sigint: force shutdown
+    on sigterm: force shutdown
+    on death_check: graceful shutdown
+    """
+    def __init__(self, check_for_death: Callable, work: Callable, graceful_shutdown: Callable, force_shutdown: Callable):
         self.check_for_death = check_for_death
         self.work = work
         self.graceful_shutdown = graceful_shutdown
-        signal.signal(signal.SIGINT, self.exit_gracefully)
-        signal.signal(signal.SIGTERM, self.exit_gracefully)
+        self.force_shutdown = force_shutdown
+        signal.signal(signal.SIGINT, self.force_shutdown)
+        signal.signal(signal.SIGTERM, self.force_shutdown)
 
     def __call__(self):
         try:
-            while not self.check_for_death():
+            while not self.exit_gracefully():
                 self.work()
-            self.exit_gracefully()
         except GracefulShutdown:
             self.graceful_shutdown()
+        except ForceShutdown:
+            self.force_shutdown()
         finally:
             exit(0)
 
     @staticmethod
-    def exit_gracefully(*args, **kwargs):
-        logger.info("got sigterm/sigint, starting shutdown process...")
-        raise GracefulShutdown
+    def force_exit(*args, **kwargs) -> NoReturn:
+        logger.info("got sigterm/sigint, starting force shutdown process...")
+        raise ForceShutdown
+
+    def exit_gracefully(self, *args, **kwargs) -> Union[bool, NoReturn]:
+        """
+        checks whether pod should die and exit gracefully
+        """
+        if self.check_for_death():
+            logger.info("got signal to die after finishing work, starting graceful shutdown process...")
+            raise GracefulShutdown
+        return False
