@@ -8,6 +8,8 @@ readme = "README.md"
 exclude = [
     "*_test.py",    # Matches files ending with "_test" in any directory
     "**/*_test.py", # Matches recursively in subdirectories
+    "*_tests.py",    # Matches files ending with "_tests" in any directory
+    "**/*_tests.py", # Matches recursively in subdirectories
 ]
 
 [tool.poetry.dependencies]

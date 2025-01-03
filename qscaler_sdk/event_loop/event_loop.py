@@ -25,8 +25,8 @@ class EventLoop:
         self.work = work
         self.graceful_shutdown = graceful_shutdown
         self.force_shutdown = force_shutdown
-        signal.signal(signal.SIGINT, self.force_shutdown)
-        signal.signal(signal.SIGTERM, self.force_shutdown)
+        signal.signal(signal.SIGINT, self.force_exit)
+        signal.signal(signal.SIGTERM, self.force_exit)
 
     def __call__(self):
         try:
