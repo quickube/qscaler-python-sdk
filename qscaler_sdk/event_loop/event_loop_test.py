@@ -1,11 +1,10 @@
-import os
 import signal
 import threading
 import time
 
 import pytest
 
-from qscaler_sdk.event_loop.event_loop import EventLoop, ForceShutdown
+from qscaler_sdk.event_loop.event_loop import EventLoop
 
 
 class TestEventLoop:

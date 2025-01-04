@@ -11,7 +11,7 @@ deploy: local-build
 
 .PHONY: lint
 lint:
-	poetry run ruff check .
+	poetry run ruff check . --fix
 
 .PHONY: test
 test:
