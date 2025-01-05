@@ -12,6 +12,7 @@ spec:
         image: localhost:5001/worker:latest
         imagePullPolicy: Always
   scaleConfig:
+    activateVPA: true
     queue: "queue1"
     minReplicas: 1
     maxReplicas: 5

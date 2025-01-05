@@ -11,6 +11,7 @@ class ScaleConfig(BaseModel):
     maxReplicas: int
     scalerConfigRef: str
     scalingFactor: int
+    activateVPA: bool
 
 
 class QWorkerStatus(BaseModel):

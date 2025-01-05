@@ -16,7 +16,8 @@ class TestScalerConfig:
                     'queue': 'fake-q',
                     'minReplicas': 1,
                     'maxReplicas': 2,
-                    'scalingFactor': 1
+                    'scalingFactor': 1,
+                    "activateVPA": True,
                 }
             }
         }
@@ -41,6 +42,7 @@ class TestScalerConfig:
                 "type": "redis",
                 "config": {
                     "host": "fake_host",
+                    "activateVPA": True,
                     "port": 111,
                     "password": {
                         "secret": {

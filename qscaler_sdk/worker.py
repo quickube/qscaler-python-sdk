@@ -16,7 +16,7 @@ class Worker:
 
     def __init__(self):
         self.act = None
-        self.extra_termination = None
+        self.extra_termination = lambda: None
         self.qworker = QWorker()
         self.scaler_config = ScalerConfig()
         self.broker = BrokersFactory.get_broker(self.scaler_config.spec.type)
@@ -47,6 +47,7 @@ class Worker:
         self.k8s_client.remove_owner_ref(config.pod_name)
         self.extra_termination()
         self.broker.close()
+        self.k8s_client.remove_pod(config.pod_name)
 
     def should_i_die(self):
         self.qworker.update()
