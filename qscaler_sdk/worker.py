@@ -45,9 +45,9 @@ class Worker:
     def graceful_shutdown(self):
         logger.info("starting graceful shutdown...")
         self.k8s_client.remove_owner_ref(config.pod_name)
-        self.k8s_client.remove_pod(config.pod_name)
         self.extra_termination()
         self.broker.close()
+        self.k8s_client.remove_pod(config.pod_name)
 
     def should_i_die(self):
         self.qworker.update()
