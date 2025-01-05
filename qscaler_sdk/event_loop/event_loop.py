@@ -23,12 +23,13 @@ class EventLoop:
         try:
             while not self.check_for_death():
                 self.work()
-            self.exit_gracefully(self)
+            self.exit_gracefully()
         except GracefulShutdown:
             self.graceful_shutdown()
+        finally:
             exit(0)
 
     @staticmethod
-    def exit_gracefully(self, *args, **kwargs):
+    def exit_gracefully(*args, **kwargs):
         logger.info("got sigterm/sigint, starting shutdown process...")
         raise GracefulShutdown
