@@ -21,6 +21,7 @@ class Worker:
         self.scaler_config = ScalerConfig()
         self.broker = BrokersFactory.get_broker(self.scaler_config.spec.type)
         self.k8s_client = K8sClient()
+        self.current_task = None
 
     @property
     def queue(self):
@@ -28,19 +29,29 @@ class Worker:
         return self.qworker.config.queue
 
     def run(self):
+        """
+        graceful shutdown: removing owner ref and starting graceful shutdown
+        force shutdown: publishing task back to queue and closing broker
+        """
         logger.info("starting worker...")
         event_loop = EventLoop(check_for_death=self.should_i_die,
                                work=self.work,
-                               graceful_shutdown=self.graceful_shutdown)
+                               graceful_shutdown=self.graceful_shutdown,
+                               force_shutdown=self.force_shutdown)
         event_loop()
 
     def work(self):
         logger.info("fetching work...")
-        data = self.broker.get_message(self.queue)
-        if data is None:
-            return
-        logger.info("doing work...")
-        self.act(data)
+        self.current_task = self.broker.get_message(self.queue)
+        if self.current_task:
+            logger.info("doing work...")
+            self.act(self.current_task)
+            self.current_task = None
+
+    def force_shutdown(self):
+        logger.info("starting force shutdown...")
+        self.broker.publish(queue=self.queue, data=self.current_task)
+        self.broker.close()
 
     def graceful_shutdown(self):
         logger.info("starting graceful shutdown...")
