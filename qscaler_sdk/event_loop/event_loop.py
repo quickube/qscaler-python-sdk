@@ -36,8 +36,7 @@ class EventLoop:
             self.graceful_shutdown()
         except ForceShutdown:
             self.force_shutdown()
-        finally:
-            exit(0)
+
 
     @staticmethod
     def force_exit(*args, **kwargs) -> NoReturn:
