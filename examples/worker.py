@@ -2,7 +2,7 @@ import logging
 import time
 from typing import Dict, Any
 
-from qscaler_sdk.worker import Worker
+from qscaler.worker import Worker
 
 worker = Worker()
 

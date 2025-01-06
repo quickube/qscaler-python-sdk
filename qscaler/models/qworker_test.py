@@ -1,8 +1,8 @@
 
 import pytest
 
-from qscaler_sdk.k8s.k8s_client import K8sClient
-from qscaler_sdk.models.qworker import QWorker
+from qscaler.k8s.k8s_client import K8sClient
+from qscaler.models.qworker import QWorker
 
 
 @pytest.mark.incluster

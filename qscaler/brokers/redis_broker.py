@@ -4,9 +4,9 @@ from typing import Any, List, Optional
 
 import redis
 
-from qscaler_sdk.brokers.broker import Broker
-from qscaler_sdk.configuration.config import config
-from qscaler_sdk.models.scaler_config import ScalerConfig
+from qscaler.brokers.broker import Broker
+from qscaler.configuration.config import config
+from qscaler.models.scaler_config import ScalerConfig
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")

@@ -2,7 +2,7 @@ import pytest
 from kubernetes.client import CustomObjectsApi, CoreV1Api
 from kubernetes.client.rest import ApiException
 from kubernetes.client.models.v1_secret import V1Secret
-from qscaler_sdk.k8s.k8s_client import K8sClient
+from qscaler.k8s.k8s_client import K8sClient
 
 
 @pytest.mark.incluster

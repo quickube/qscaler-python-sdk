@@ -1,7 +1,7 @@
 import pytest
 
-from qscaler_sdk.k8s.k8s_client import K8sClient
-from qscaler_sdk.models.scaler_config import ScalerConfig
+from qscaler.k8s.k8s_client import K8sClient
+from qscaler.models.scaler_config import ScalerConfig
 
 
 @pytest.mark.incluster
@@ -27,7 +27,7 @@ class TestScalerConfig:
         # Arrange
         crd_fetch_method = mocker.patch.object(client, "get_scaler_config", return_value={}, autospec=True)
         mocker.patch.object(client, "get_qworker", return_value=fake_qworker_crd, autospec=True)
-        mocker.patch("qscaler_sdk.models.scaler_config.ScalerConfig._replace_secrets_with_values", return_value=None,
+        mocker.patch("qscaler.models.scaler_config.ScalerConfig._replace_secrets_with_values", return_value=None,
                      autospec=True)
         # Act
         ScalerConfig()

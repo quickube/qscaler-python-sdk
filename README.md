@@ -1,19 +1,44 @@
 # QScaler-SDK
-qscaler-sdk is a python package to use with QScaler for an easy server-worker setup using the QScaler autoscaler 
+
+Python SDK for integration with QScaler, a Kubernetes-native queue worker autoscaler.
 
 ## Overview
-Worker python SDK for Qscale, able to setup a graceful shutdown method and a work method.
+
+QScaler-SDK enables efficient scaling of queue workers in a Kubernetes environment. It works by monitoring changes in the `QWORKER_NAME` Custom Resource Definition (CRD) managed by the QScaler controller. 
+
+### Key Features
+- Automatically detects changes in desired replica counts or pod specifications.
+- Gracefully shuts down when necessary to ensure smooth scaling and resource optimization.
+- Continuously loops to process tasks unless a change is detected.
 
 ## How It Works
-* The worker will watch the qworker crd given by `QWORKER_NAME` 
-* once detected change in desired replicas and current, if diff is negative. it will remove its owner ref and start a graceful shutdown procedure
-* other wise will continue looping forever, each `MESSAGE_TIMEOUT` check for diff then run work 
+
+1. **Monitor Changes**: The worker watches the `QWORKER_NAME` CRD for updates.
+2. **Trigger Actions**: 
+   - If a change in the desired replica count or pod specification hash is detected:
+     - The worker removes its owner reference.
+     - Initiates a graceful shutdown process.
+   - If no changes are detected, the worker:
+     - Continues running indefinitely.
+     - Periodically checks for differences at intervals defined by `MESSAGE_TIMEOUT`.
+3. **Task Processing**: During each loop, the worker processes tasks unless a termination condition is met.
 
 ## Setup
-### EnvVars:
-* `QWORKER_NAME: qworker crd name`
-* `MESSAGE_TIMEOUT: broker msg wait timeout, relevant for redis broker`
-* `HOSTNAME: podname, autofilled by k8s`
-* `K8S_API_GROUP: qworker api group; default "quickube.com"`
-* `K8S_API_VERSION: qworker api version; default "v1alpha1"`
- 
+
+To use QScaler-SDK, configure the following environment variables:
+
+### Environment Variables
+
+| Variable           | Description                                                                                   |
+|--------------------|-----------------------------------------------------------------------------------------------|
+| `QWORKER_NAME`     | Name of the QWorker CRD to monitor.                                                          |
+| `PULLING_INTERVAL` | Interval (in seconds) for checking the QWorker CRD status when no tasks are running.          |
+| `POD_SPEC_HASH`    | Hash of the current pod specification. Used to detect changes in the CRD and trigger shutdown.|
+| `HOSTNAME`         | Name of the pod, automatically set by Kubernetes.                                            |
+
+## Example
+
+A complete example is provided in the `example` folder, including the following files:
+
+### [`worker.py`](./example/worker.py)
+### [`qworker.yaml`](./example/qworker.yaml)
