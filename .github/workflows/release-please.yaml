@@ -22,4 +22,4 @@ jobs:
           release-type: python
           package-name: qscaler_sdk
           version-file: pyproject.toml
-          token: ${{ secrets.GIT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
