@@ -40,5 +40,5 @@ To use QScaler-SDK, configure the following environment variables:
 
 A complete example is provided in the `example` folder, including the following files:
 
-### [`worker.py`](./example/worker.py)
-### [`qworker.yaml`](./example/qworker.yaml)
+### [`worker.py`](examples/worker.py)
+### [`qworker.yaml`](examples/qworker.yaml)
