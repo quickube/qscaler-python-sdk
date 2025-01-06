@@ -1,12 +1,12 @@
 import logging
 from typing import Callable
 
-from qscaler_sdk.brokers.brokers_factory import BrokersFactory
-from qscaler_sdk.configuration.config import config
-from qscaler_sdk.event_loop.event_loop import EventLoop
-from qscaler_sdk.k8s.k8s_client import K8sClient
-from qscaler_sdk.models.qworker import QWorker
-from qscaler_sdk.models.scaler_config import ScalerConfig
+from qscaler.brokers.brokers_factory import BrokersFactory
+from qscaler.configuration.config import config
+from qscaler.event_loop.event_loop import EventLoop
+from qscaler.k8s.k8s_client import K8sClient
+from qscaler.models.qworker import QWorker
+from qscaler.models.scaler_config import ScalerConfig
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")

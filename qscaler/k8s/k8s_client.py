@@ -5,7 +5,7 @@ from typing import Any
 from kubernetes import client, config as cluster_config
 from kubernetes.client.rest import ApiException
 
-from qscaler_sdk.utils.singleton import SingletonMeta
+from qscaler.utils.singleton import SingletonMeta
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")

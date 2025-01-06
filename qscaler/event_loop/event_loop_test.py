@@ -4,7 +4,7 @@ import time
 
 import pytest
 
-from qscaler_sdk.event_loop.event_loop import EventLoop
+from qscaler.event_loop.event_loop import EventLoop
 
 
 class TestEventLoop:

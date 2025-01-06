@@ -2,7 +2,7 @@ from abc import ABC
 from abc import abstractmethod
 from typing import Any, List, Optional
 
-from qscaler_sdk.utils.singleton import SingletonMeta
+from qscaler.utils.singleton import SingletonMeta
 
 
 class Broker(ABC, metaclass=SingletonMeta):

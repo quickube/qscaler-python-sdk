@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
-from qscaler_sdk.configuration.config import config
-from qscaler_sdk.k8s.k8s_client import K8sClient
-from qscaler_sdk.utils.singleton import SingletonMeta
+from qscaler.configuration.config import config
+from qscaler.k8s.k8s_client import K8sClient
+from qscaler.utils.singleton import SingletonMeta
 
 
 class ScaleConfig(BaseModel):
