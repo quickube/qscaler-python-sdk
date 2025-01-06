@@ -2,7 +2,7 @@
 
 Python SDK for integration with QScaler, a Kubernetes-native queue worker autoscaler.
 
-## Overview
+## OverviewOverview
 
 QScaler-SDK enables efficient scaling of queue workers in a Kubernetes environment. It works by monitoring changes in the `QWORKER_NAME` Custom Resource Definition (CRD) managed by the QScaler controller. 
 
@@ -20,7 +20,7 @@ QScaler-SDK enables efficient scaling of queue workers in a Kubernetes environme
      - Initiates a graceful shutdown process.
    - If no changes are detected, the worker:
      - Continues running indefinitely.
-     - Periodically checks for differences at intervals defined by `MESSAGE_TIMEOUT`.
+     - Periodically checks for differences at intervals defined by `PULLING_INTERVAL`.
 3. **Task Processing**: During each loop, the worker processes tasks unless a termination condition is met.
 
 ## Setup

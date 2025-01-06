@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "qscaler-sdk"
+name = "qscaler"
 version = "0.0.1"
 description = "Python SDK for QScaler - Kubernetes-native queue worker autoscaler"
 authors = ["Quickube"]
