@@ -1,10 +1,12 @@
 import logging
+import os
 from base64 import b64decode
 from typing import Any
 
 from kubernetes import client, config as cluster_config
 from kubernetes.client.rest import ApiException
 
+from qscaler.configuration.config import config
 from qscaler.utils.singleton import SingletonMeta
 
 logger = logging.getLogger(__name__)
@@ -14,18 +16,22 @@ logger.setLevel("DEBUG")
 class K8sClient(metaclass=SingletonMeta):
 
     def __init__(self):
-        cluster_config.load_incluster_config()
+        cluster_config.load_config()
         self.api_group = "quickube.com"
         self.api_version = "v1alpha1"
-        self.namespace = self._load_namespace_from_file()
+        self.namespace = self._load_namespace()
 
     @staticmethod
-    def _load_namespace_from_file():
-        try:
-            with open("/var/run/secrets/kubernetes.io/serviceaccount/namespace", "r") as f:
+    def _load_namespace() -> str | None:
+        ns_path = "/var/run/secrets/kubernetes.io/serviceaccount/namespace"
+        if os.path.exists(ns_path):
+            with open(ns_path) as f:
                 return f.read().strip()
-        except FileNotFoundError:
-            raise RuntimeError("Namespace file not found. Are you running in a Kubernetes cluster?")
+        try:
+            contexts, active_context = config.list_kube_config_contexts()
+            return active_context["context"]["namespace"]
+        except (KeyError, StopIteration):
+            return "default"
 
     def get_qworker(self, name: str) -> dict:
         api_instance = client.CustomObjectsApi()

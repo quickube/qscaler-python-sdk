@@ -29,12 +29,13 @@ To use QScaler-SDK, configure the following environment variables:
 
 ### Environment Variables
 
-| Variable           | Description                                                                                   |
-|--------------------|-----------------------------------------------------------------------------------------------|
-| `QWORKER_NAME`     | Name of the QWorker CRD to monitor.                                                          |
-| `PULLING_INTERVAL` | Interval (in seconds) for checking the QWorker CRD status when no tasks are running.          |
-| `POD_SPEC_HASH`    | Hash of the current pod specification. Used to detect changes in the CRD and trigger shutdown.|
-| `HOSTNAME`         | Name of the pod, automatically set by Kubernetes.                                            |
+| Variable           | Description                                                                                    |
+|--------------------|------------------------------------------------------------------------------------------------|
+| `QWORKER_NAME`     | Name of the QWorker CRD to monitor.                                                            |
+| `PULLING_INTERVAL` | Interval (in seconds) for checking the QWorker CRD status when no tasks are running.           |
+| `POD_SPEC_HASH`    | Hash of the current pod specification. Used to detect changes in the CRD and trigger shutdown. |
+| `HOSTNAME`         | Name of the pod, automatically set by Kubernetes.                                              |
+| `KUBECONFIG`       | KubeConfig file path, used if running from outside of k8s cluster.                              |
 
 ## Example
 
