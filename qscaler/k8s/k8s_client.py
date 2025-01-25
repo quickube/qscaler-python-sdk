@@ -28,7 +28,7 @@ class K8sClient(metaclass=SingletonMeta):
             with open(ns_path) as f:
                 return f.read().strip()
         try:
-            contexts, active_context = config.list_kube_config_contexts()
+            contexts, active_context = cluster_config.list_kube_config_contexts()
             return active_context["context"]["namespace"]
         except (KeyError, StopIteration):
             return "default"
