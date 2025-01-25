@@ -12,9 +12,8 @@ def mock_incluster_environment(request, mocker):
     if "incluster" in request.keywords:
         os.environ.setdefault("QWORKER_NAME", "fake-qworker")
         os.environ.setdefault("HOSTNAME", "localhost")
-        mocker.patch("qscaler.k8s.k8s_client.K8sClient._load_namespace_from_file", return_value="fake")
-        mocker.patch("qscaler.k8s.k8s_client.cluster_config.load_incluster_config", return_value=None)
-
+        mocker.patch("qscaler.k8s.k8s_client.K8sClient._load_namespace", return_value="fake")
+        mocker.patch("qscaler.k8s.k8s_client.cluster_config.load_config", return_value=None)
 
 
 @pytest.fixture(autouse=True)
