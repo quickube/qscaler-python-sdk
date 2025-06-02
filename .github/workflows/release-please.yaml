@@ -21,14 +21,3 @@ jobs:
         with:
           release-type: python
           token: ${{ secrets.GIT_TOKEN }}
-  pypi-publish:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Build and publish to pypi
-        uses: JRubics/poetry-publish@v2.1
-        with:
-          pypi_token: ${{ secrets.PYPI_TOKEN }}
-          build_format: "wheel"
-          poetry_install_options: "--without lint --without test"
