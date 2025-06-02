@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.2](https://github.com/quickube/qscaler-python-sdk/compare/v0.0.1...v0.0.2) (2025-06-02)
+
+
+### Bug Fixes
+
+* action ([d9d3d6f](https://github.com/quickube/qscaler-python-sdk/commit/d9d3d6f1ee7259220d9f66eb0bdef6e1213474fd))
+* release ([918c889](https://github.com/quickube/qscaler-python-sdk/commit/918c889d621096282abe3c771a70687a56aebb44))
+* release ([92ce69a](https://github.com/quickube/qscaler-python-sdk/commit/92ce69a5131483fd085eae68b2e759c3a3c1dfd2))
+* release ([062942f](https://github.com/quickube/qscaler-python-sdk/commit/062942ff3b8aefec6cf80a9daf89e54a81b9432e))
+
+
+### Miscellaneous Chores
+
+* release 0.0.2 ([59fee40](https://github.com/quickube/qscaler-python-sdk/commit/59fee40dfae5a729cf3897acdac831bc349547d8))
+* release 2.0.0 ([6e61a7f](https://github.com/quickube/qscaler-python-sdk/commit/6e61a7fab4cd216b10c11f67f4fa5a5a1b20bf0e))
+
 ## [0.0.1](https://github.com/quickube/qscaler-python-sdk/compare/v0.0.1...v0.0.1) (2025-01-06)
 
 
