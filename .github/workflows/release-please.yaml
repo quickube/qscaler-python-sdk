@@ -1,9 +1,10 @@
 name: Release Please
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - main
+      - release-please-fix
 
 permissions:
   contents: write
@@ -14,12 +15,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
       - uses: google-github-actions/release-please-action@v4
         id: release
         with:
           release-type: python
-          package-name: qscaler
-          version-file: pyproject.toml
           token: ${{ secrets.GIT_TOKEN }}
+          target-branch: release-please-fix
+  pypi-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build and publish to pypi
+        uses: JRubics/poetry-publish@v2.1
+        with:
+          pypi_token: ${{ secrets.PYPI_TOKEN }}
+          build_format: "wheel"
+          poetry_install_options: "--without lint --without test"
+          repository_name: "testpypi"
+          repository_url: "https://test.pypi.org/legacy/"
