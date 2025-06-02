@@ -5,6 +5,13 @@
 
 ### Bug Fixes
 
+* pypi publish ([daf626c](https://github.com/quickube/qscaler-python-sdk/commit/daf626c8dffb6e4dd1082daa3944ff1f4b887a67))
+
+## [0.0.2](https://github.com/quickube/qscaler-python-sdk/compare/v0.0.1...v0.0.2) (2025-06-02)
+
+
+### Bug Fixes
+
 * action ([d9d3d6f](https://github.com/quickube/qscaler-python-sdk/commit/d9d3d6f1ee7259220d9f66eb0bdef6e1213474fd))
 * release ([918c889](https://github.com/quickube/qscaler-python-sdk/commit/918c889d621096282abe3c771a70687a56aebb44))
 * release ([92ce69a](https://github.com/quickube/qscaler-python-sdk/commit/92ce69a5131483fd085eae68b2e759c3a3c1dfd2))
